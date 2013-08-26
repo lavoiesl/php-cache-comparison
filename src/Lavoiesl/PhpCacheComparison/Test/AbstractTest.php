@@ -4,11 +4,12 @@ namespace Lavoiesl\PhpCacheComparison\Test;
 
 use Lavoiesl\PhpBenchmark\AbstractTest as BaseTest;
 use Lavoiesl\PhpCacheComparison\TestObject;
+use Doctrine\Common\Cache\Cache;
 use Lavoiesl\PhpCacheComparison\cache\AbstractCache;
 
 abstract class AbstractTest extends BaseTest
 {
-    protected $data = array();
+    protected $data;
 
     protected $cache;
 
@@ -16,9 +17,9 @@ abstract class AbstractTest extends BaseTest
 
     protected $cache_key;
 
-    public function __construct(AbstractCache $cache, $size = 64)
+    public function __construct(Cache $cache, $size = 64)
     {
-        parent::__construct($cache->getClassName() . '-' . $this->getClassName());
+        parent::__construct(self::getCacheName($cache) . '-' . static::getClassName());
 
         $this->cache = $cache;
         $this->cache_key = uniqid();
@@ -27,23 +28,32 @@ abstract class AbstractTest extends BaseTest
 
     protected function prepare()
     {
+        $this->data = array();
+
         $size = ceil($this->size / 4);
 
-        for ($i=0; $i < 4; $i++) { 
-            $this->data[] = new TestObject($size);
+        for ($i=0; $i < 4; $i++) {
+            $obj = new TestObject;
+            $obj->fill($size);
+            $this->data[] = $obj;
         }
-
-        $this->cache->connect();
     }
 
     protected function cleanup()
     {
-        $this->cache->disconnect();
+        $this->data = null;
+        $this->cache->deleteAll();
     }
 
-    public function getClassName()
+    public static function getClassName()
     {
-        preg_match('/\\\\([^\\\\]+)Test$/', get_class($this), $matches);
+        preg_match('/\\\\([^\\\\]+)Test$/', get_called_class(), $matches);
+        return $matches[1];
+    }
+
+    public static function getCacheName(Cache $cache)
+    {
+        preg_match('/\\\\([^\\\\]+)Cache$/', get_class($cache), $matches);
         return $matches[1];
     }
 }

@@ -6,7 +6,7 @@ class TestObject
 {
     public $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8;
 
-    public function __construct($size)
+    public function fill($size)
     {
         $length = round($size / 8);
 
@@ -24,5 +24,22 @@ class TestObject
         }
 
         return substr($garbage, 0, $length);
+    }
+
+    /**
+     * Needed by Doctrine\Common\Cache\PhpFileCache
+     *
+     * @param  array  $data
+     * @return self
+     */
+    public static function __set_state(array $data)
+    {
+        $obj = new self;
+
+        foreach ($data as $key => $value) {
+            $obj->$key = $value;
+        }
+
+        return $obj;
     }
 }

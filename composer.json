@@ -1,6 +1,7 @@
 {
     "require": {
-        "lavoiesl/php-benchmark": "dev-master"
+        "lavoiesl/php-benchmark": "dev-master",
+        "doctrine/cache": "dev-master"
     },
     "autoload": {
         "psr-0": {"Lavoiesl\\PhpCacheComparison": "src/"}
