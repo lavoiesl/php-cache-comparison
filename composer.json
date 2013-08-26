@@ -1,9 +1,16 @@
 {
     "require": {
-        "lavoiesl/php-benchmark": "dev-master",
-        "doctrine/cache": "dev-master"
+        "lavoiesl/php-benchmark": "*",
+        "lavoiesl/doctrine-cache-detector": "*"
     },
     "autoload": {
         "psr-0": {"Lavoiesl\\PhpCacheComparison": "src/"}
-    }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sébastien Lavoie",
+            "email": "seb@wemakecustom.com"
+        }
+    ]
 }
